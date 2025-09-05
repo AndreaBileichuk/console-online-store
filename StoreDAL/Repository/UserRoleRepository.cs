@@ -1,14 +1,12 @@
 ﻿namespace StoreDAL.Repository;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using StoreDAL.Data;
-using StoreDAL.Entities;
-using StoreDAL.Interfaces;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Data;
+using Entities;
+using Interfaces;
 
 public class UserRoleRepository : AbstractRepository, IUserRoleRepository
 {
@@ -29,7 +27,9 @@ public class UserRoleRepository : AbstractRepository, IUserRoleRepository
 
     public void Delete(UserRole entity)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(entity);
+        this.dbSet.Remove(entity);
+        this.context.SaveChanges();
     }
 
     public void DeleteById(int id)
@@ -49,7 +49,21 @@ public class UserRoleRepository : AbstractRepository, IUserRoleRepository
 
     public IEnumerable<UserRole> GetAll(int pageNumber, int rowCount)
     {
-        throw new NotImplementedException();
+        if (pageNumber < 1)
+        {
+            pageNumber = 1;
+        }
+
+        if (rowCount < 1)
+        {
+            rowCount = 10;
+        }
+
+        return this.dbSet
+            .OrderBy(e => e.Id)
+            .Skip((pageNumber - 1) * rowCount)
+            .Take(rowCount)
+            .ToList();
     }
 
     public UserRole GetById(int id)
@@ -59,6 +73,13 @@ public class UserRoleRepository : AbstractRepository, IUserRoleRepository
 
     public void Update(UserRole entity)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(entity);
+
+        var existing = this.dbSet.Find(entity.Id);
+        if (existing != null)
+        {
+            this.context.Entry(existing).CurrentValues.SetValues(entity);
+            this.context.SaveChanges();
+        }
     }
 }
