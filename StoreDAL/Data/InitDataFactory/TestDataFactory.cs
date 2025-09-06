@@ -1,4 +1,6 @@
-﻿namespace StoreDAL.Data.InitDataFactory;
+﻿using System.Security.Cryptography;
+
+namespace StoreDAL.Data.InitDataFactory;
 
 using Entities;
 
@@ -226,13 +228,13 @@ public class TestDataFactory : AbstractDataFactory
     {
         return new[]
         {
-            new User(1, "John", "Smith", "admin", "admin123", 1),
-            new User(2, "Alice", "Johnson", "alice.j", "password123", 2),
-            new User(3, "Bob", "Wilson", "bob.w", "bobpass", 2),
-            new User(4, "Sarah", "Davis", "sarah.d", "sarahpass", 2),
-            new User(5, "Mike", "Brown", "mike.b", "mikepass", 2),
-            new User(6, "Emily", "Taylor", "emily.t", "emilypass", 2),
-            new User(7, "Guest", "User", "guest", "guest", 3),
+            new User(1, "John", "Smith", "admin", HashPassword("admin123"), 1),
+            new User(2, "Alice", "Johnson", "alice.j", HashPassword("password123"), 2),
+            new User(3, "Bob", "Wilson", "bob.w", HashPassword("bobpass"), 2),
+            new User(4, "Sarah", "Davis", "sarah.d", HashPassword("sarahpass"), 2),
+            new User(5, "Mike", "Brown", "mike.b", HashPassword("mikepass"), 2),
+            new User(6, "Emily", "Taylor", "emily.t", HashPassword("emilypass"), 2),
+            new User(7, "Guest", "User", "guest", HashPassword("guest"), 3),
         };
     }
 
@@ -244,5 +246,17 @@ public class TestDataFactory : AbstractDataFactory
             new UserRole(2, "Registered"),
             new UserRole(3, "Guest"),
         };
+    }
+
+    public static string HashPassword(string password)
+    {
+        // Generate random salt
+        byte[] salt = RandomNumberGenerator.GetBytes(16);
+
+        // Hash password with salt
+        byte[] hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, 100000, HashAlgorithmName.SHA256, 32);
+
+        // Combine salt + hash and return as base64
+        return Convert.ToBase64String(salt.Concat(hash).ToArray());
     }
 }

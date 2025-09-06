@@ -9,7 +9,7 @@ using StoreBLL.Models;
 
 internal static class InputHelper
 {
-    public static CategoryModel ReadCategoryiModel()
+    public static CategoryModel ReadCategoryisModel()
     {
         throw new NotImplementedException();
     }

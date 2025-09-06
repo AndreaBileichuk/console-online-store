@@ -9,14 +9,14 @@ namespace StoreDAL.Repository
     {
         private readonly DbSet<Product> dbSet;
 
-        public ProductRepository(StoreDbContext context)
+        public ProductRepository(StoreDbContext? context)
             : base(context)
         {
             ArgumentNullException.ThrowIfNull(context);
             this.dbSet = context.Set<Product>();
         }
 
-        public void Add(Product entity)
+        public void Add(Product? entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
@@ -24,7 +24,7 @@ namespace StoreDAL.Repository
             this.context.SaveChanges();
         }
 
-        public void Delete(Product entity)
+        public void Delete(Product? entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
@@ -68,10 +68,13 @@ namespace StoreDAL.Repository
 
         public Product GetById(int id)
         {
-            return this.dbSet.Find(id);
+            return this.dbSet
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Title)
+                .FirstOrDefault(p => p.Id == id);
         }
 
-        public void Update(Product entity)
+        public void Update(Product? entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 

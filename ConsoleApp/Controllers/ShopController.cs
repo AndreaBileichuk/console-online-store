@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConsoleApp.Controllers;
+﻿using ConsoleApp.Controllers;
 using ConsoleApp.Handlers.ContextMenuHandlers;
 using ConsoleApp.Helpers;
-using ConsoleApp1;
+using ConsoleApp.MenuCore;
 using ConsoleMenu;
 using StoreBLL.Services;
 using StoreDAL.Data;

@@ -10,20 +10,20 @@ using StoreBLL.Models;
 
 public abstract class ContextMenuHandler
 {
-    protected readonly ICrud service;
-    protected readonly Func<AbstractModel> readModel;
+    protected readonly ICrud Service;
+    protected readonly Func<AbstractModel> ReadModel;
 
     protected ContextMenuHandler(ICrud service, Func<AbstractModel> readModel)
     {
-        this.service = service;
-        this.readModel = readModel;
+        this.Service = service;
+        this.ReadModel = readModel;
     }
 
     public void GetItemDetails()
     {
         Console.WriteLine("Input record ID for more details");
         int id = int.Parse(Console.ReadLine() !, CultureInfo.InvariantCulture);
-        Console.WriteLine(this.service.GetById(id));
+        Console.WriteLine(this.Service.GetById(id));
     }
 
     public abstract (ConsoleKey id, string caption, Action action)[] GenerateMenuItems();

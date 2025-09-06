@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using StoreDAL.Data;
 using StoreDAL.Entities;
 using StoreDAL.Interfaces;
@@ -21,14 +16,14 @@ public class UserRepository : AbstractRepository, IUserRepository
         this.dbSet = context.Set<User>();
     }
 
-    public void Add(User entity)
+    public void Add(User? entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
         this.dbSet.Add(entity);
         this.context.SaveChanges();
     }
 
-    public void Delete(User entity)
+    public void Delete(User? entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
         this.dbSet.Remove(entity);
@@ -73,7 +68,7 @@ public class UserRepository : AbstractRepository, IUserRepository
         return this.dbSet.Find(id);
     }
 
-    public void Update(User entity)
+    public void Update(User? entity)
     {
         ArgumentNullException.ThrowIfNull(entity);
 
@@ -83,5 +78,10 @@ public class UserRepository : AbstractRepository, IUserRepository
             this.context.Entry(existing).CurrentValues.SetValues(entity);
             this.context.SaveChanges();
         }
+    }
+
+    public User? GetUserByLogin(string? login)
+    {
+        return this.dbSet.Include(u => u.Role).FirstOrDefault(u => u.Login == login);
     }
 }
